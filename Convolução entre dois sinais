@@ -1,0 +1,196 @@
+from manim import *
+import scipy.integrate as integrate
+
+class Total(Scene):
+    def construct(self):
+        
+        self.wait(4)
+        title = Tex("Convolução no tempo contínuo").set_color(RED)
+        ConvoEq = Tex(r"$$y(t)=x(t)*h(t)=\int_{-\infty}^\infty x(\tau)h(t-\tau)d(\tau)$$").move_to([0,2,0]).scale(0.8)
+
+        Algoritmo = Tex("Passo a passo para o cálculo da convolução").move_to([0,-1.5,0]).set_color(BLUE).scale(0.9)
+        Passo1 = Tex("1.Desenhe os gráficos dos sinais ", r"$x(\tau)$", " e ", r"$h(\tau)$;").move_to([-1.9,-2.5,0]).scale(0.7)
+        Passo2 = Tex("2.Escolha um dos sinais, digamos ", r"$x(\tau)$", " e o inverta no tempo para obter ", r"$x(t-\tau)$;").move_to([0.72,-3,0]).scale(0.7)
+        Passo3 = Tex("3.Para ", r"$t$", " variando de ", r"$-\infty$", " até ", r"$\infty$.").move_to([-2.8,-3.5,0]).scale(0.7)
+        Passo4 = Tex("4.Resolvendo as integrais").move_to([0,2.3,0]).scale(0.7)
+        Example1 = Tex("Exemplo:").set_color(YELLOW).scale(0.9).move_to([0,3,0])
+
+        IntegerP1 = Tex("Caso 1: ", r"$t+1<-3$:").set_color(YELLOW).move_to([-3.5,0.5,0]).scale(0.7)
+        IntegerP1t = Tex("Caso 1: ", r"$t<-4$:").set_color(WHITE).move_to([-3.5,0.5,0]).scale(0.7)
+
+        IntegerP2 = Tex("Caso 2: ", r"$-3\leq t+1<0$:").set_color(YELLOW).move_to([-3.5,0.5,0]).scale(0.7)
+        IntegerP2t = Tex("Caso 2: ", r"$-4\leq t<-1$:").set_color(WHITE).move_to([-3.5,0.5,0]).scale(0.7)
+
+        IntegerP3 = Tex("Caso 3: ", r"$t+1\geq0$:").set_color(YELLOW).move_to([-3.5,0.5,0]).scale(0.7)
+        IntegerP3t = Tex("Caso 3: ", r"$t\geq-1$:").set_color(WHITE).move_to([-3.5,0.5,0]).scale(0.7)
+
+        Equation1 = MathTex("h(t)=e^{-2t}[u(t+3)-u(t)]").move_to([3.5,1.5,0]).scale(0.8)
+        Equation2 = MathTex("x(t)=e^{-5t}u(t+1)").move_to([-3.5,1.5,0]).scale(0.8)
+
+        Equation1tau = MathTex(r"h(\tau)=e^{-2\tau}[u(\tau+3)-u(\tau)]").move_to([3.5,1.5,0]).scale(0.8)
+        Equation2tau = MathTex(r"x(\tau)=e^{-5\tau}u(\tau+1)").move_to([-3.5,1.5,0]).scale(0.8)
+
+        Equation2tauneg = MathTex(r"x(-\tau)=e^{-5(-\tau)}u(-\tau+1)").move_to([-3.5,1.5,0]).scale(0.8)
+        Equation2taunegt = MathTex(r"x(t-\tau)=e^{-5(t-\tau)}u(t-\tau+1)").move_to([-3.5,1.5,0]).scale(0.8)
+
+        Equation3 = MathTex(r"y(t)=\int_{-\infty}^\infty", r"e^{-2\tau}[u(\tau+3)-u(\tau)]", r"\cdot", r"e^{-5(t-\tau)}u(t-\tau+1)", r"d\tau").move_to([0,1.5,0]).scale(0.8)
+        Equation3[1].set_color(GREEN)
+        Equation3[3].set_color(YELLOW)
+        Equation3P1 = MathTex(r"y(t)=0").move_to([0,1.5,0]).scale(0.8)
+        Equation3P2 = MathTex(r"y(t)=\int_{-3}^{t+1}e^{-2\tau}\cdot e^{-5(t-\tau)}d\tau").move_to([0,1.5,0]).scale(0.8)
+        Equation3P2res = MathTex(r"=e^{-5t}\int_{-3}^{t+1}e^{-2\tau}e^{5\tau}d\tau",
+                                 r"=e^{-5t}\int_{-3}^{t+1}e^{3\tau}",
+                                 r"=e^{-5t}\left[\left.\frac{e^{3\tau}}{3}\right|_{-3}^{t+1}\right]",
+                                 r"=e^{-5t}\left[\frac{e^{3(t+1)}}{3}-\frac{e^{3(-3)}}{3}\right]")
+        Equation3P2[0][6:9].set_color(YELLOW)                             
+        Equation3P2[0][9:11].set_color(GREEN)                     
+        Equation3P2res[0].move_to([4.9,1.5,0]).scale(0.8) 
+        Equation3P2res[1].move_to([4,1.5,0]).scale(0.8) 
+        Equation3P2res[2].move_to([4.1,1.5,0]).scale(0.8) 
+        Equation3P2res[3].move_to([4.9,1.5,0]).scale(0.8) 
+        Equation3P3 = MathTex(r"y(t)=\int_{-3}^{0}e^{-2\tau}\cdot e^{-5(t-\tau)}d\tau").move_to([0,1.5,0]).scale(0.8)
+        Equation3P3[0][6:9].set_color(GREEN)
+        Equation3P3res = MathTex(r"=e^{-5t}\int_{-3}^{0}e^{-2\tau}e^{5\tau}d\tau",
+                                 r"=e^{-5t}\int_{-3}^{0}e^{3\tau}",
+                                 r"=e^{-5t}\left[\left.\frac{e^{3\tau}}{3}\right|_{-3}^{0}\right]",
+                                 r"=e^{-5t}\left[\frac{e^{3(0)}}{3}-\frac{e^{3(-3)}}{3}\right]")
+        Equation3P3res[0].move_to([4.9,1.5,0]).scale(0.8) 
+        Equation3P3res[1].move_to([4,1.5,0]).scale(0.8) 
+        Equation3P3res[2].move_to([4.1,1.5,0]).scale(0.8) 
+        Equation3P3res[3].move_to([4.9,1.5,0]).scale(0.8) 
+
+        Equationyt = MathTex(r"y(t)=\begin{cases}0,&t<-4\\e^{-5t}\left[\frac{e^{3(t+1)}}{3}-\frac{e^{3(-3)}}{3}\right],&-4\leq t<-1\\e^{-5t}\left[\frac{e^{3(0)}}{3}-\frac{e^{3(-3)}}{3}\right],&-1\leq t \end{cases}").move_to([4,-1.3,0]).scale(0.6)
+
+        axes = Axes(x_range = [-5,5,1], y_range = [0,200,50],
+        x_length = 5, y_length = 3,
+        axis_config = {"include_tip": False, "numbers_to_exclude": [-4,-2,2,4 ,0,50,100]}
+        ).add_coordinates().move_to([-3.5,-0.4,0]).scale(0.6)
+        axis_labels = axes.get_axis_labels(x_label = r"\tau", y_label = r"x(\tau)")
+        axis_labelsneg = axes.get_axis_labels(x_label = r"\tau", y_label = r"x(-\tau)")
+        axis_labelsnegt = axes.get_axis_labels(x_label = r"t+1", y_label = r"x(t-\tau)")
+
+        axis_labels[0].move_to([-1.6,-1.2,0]).scale(0.6)
+        axis_labels[1].move_to([-3.5,1,0]).scale(0.6)
+        axis_labelsneg[0].move_to([-1.6,-1.2,0]).scale(0.6)
+        axis_labelsneg[1].move_to([-3.5,1,0]).scale(0.6)
+        axis_labelsnegt[0].move_to([-3,-1.4,0]).scale(0.6)
+        axis_labelsnegt[1].move_to([-3.5,0.5,0]).scale(0.6)
+        
+        axes2 = Axes(x_range = [-6,6,1], y_range = [0,450,100],
+        x_length = 7, y_length = 5,
+        axis_config = {"include_tip": False, "numbers_to_exclude": [-5,-3,-1,0,1,3,5]}
+        ).add_coordinates().move_to([3, 0,0]).move_to([3.5,-0.9,0]).scale(0.6)
+        axis_labels2 = axes2.get_axis_labels(x_label = r"\tau", y_label = r"h(\tau)")
+        axis_labels2[0].move_to([6,-2.3,0]).scale(0.6)
+        axis_labels2[1].move_to([3.5,1,0]).scale(0.6)
+
+        axes3 = Axes(x_range = [-10,10,1], y_range = [0,450,100],
+        x_length = 7, y_length = 5,
+        axis_config = {"include_tip": False, "numbers_to_exclude": [-9,-8,-7,-6,-5,-4,-2,-1,1,2,4,3,5,6,7,8,9]}
+        ).add_coordinates().scale(0.6).shift(DOWN*1.25)
+        axis_labels3 = axes3.get_axis_labels(x_label = r"\tau", y_label = r"h(\tau)*x(t-\tau)")
+        axis_labels3[0].scale(0.6).shift(DOWN*0.5)
+        axis_labels3[1].scale(0.6).shift(LEFT*1.5)
+
+        axes4 = Axes(x_range = [-6,10,1], y_range = [0,6000,3000],
+        x_length = 7, y_length = 5,
+        axis_config = {"include_tip": False, "numbers_to_exclude": [-5,-3,-1,0,1,3,5,7,9]}
+        ).add_coordinates().scale(0.6).shift(DOWN*1.25)
+        axis_labels4 = axes4.get_axis_labels(x_label = "t", y_label = "y(t)").scale(0.6)
+        axis_labels4[0].shift(DOWN*1+RIGHT*0.5)
+        axis_labels4[1].shift(LEFT*1+UP*0.5)
+
+        graph = axes.plot(lambda x : np.exp(-5*x), x_range = [-1,5], color = YELLOW)
+        graph_line = Line(axes.c2p(-1,0),axes.c2p(-1,np.exp(5)), color = YELLOW)
+        G1 = VGroup(graph,graph_line,axis_labels)
+
+        graph2 = axes2.plot(lambda x : np.exp(-2*x), x_range = [-3,0], color = GREEN)
+        graph_line2 = Line(axes2.c2p(-3,0),axes2.c2p(-3,np.exp(6)), color = GREEN)
+        G2 = VGroup(graph2,graph_line2,axis_labels2)
+        
+        graph3 = axes.plot(lambda x : np.exp(5*x), x_range = [-5,1], color = YELLOW)
+        graph_line3 = Line(axes.c2p(1,0),axes.c2p(1,np.exp(5)), color = YELLOW)
+        G3 = VGroup(graph3,graph_line3,axis_labelsneg)
+
+        graph4 = axes3.plot(lambda x : np.exp(5*x), x_range = [-7,1], color = YELLOW)
+        graph_line4 = Line(axes3.c2p(1,0),axes3.c2p(1,np.exp(5)), color = YELLOW)
+        G4 = VGroup(graph4,graph_line4).shift(LEFT*0.9)
+
+        graph5 = axes3.plot(lambda x : np.exp(-2*x), x_range = [-3,0], color = GREEN)
+        graph_line5 = Line(axes3.c2p(-3,0),axes3.c2p(-3,np.exp(6)), color = GREEN)
+        G5 = VGroup(graph5,graph_line5,axes3,axis_labels3)
+
+        graph6 = axes4.plot(lambda x : np.exp(-5*x)*(np.exp(3*(x+1))/3-np.exp(-3*(3))/3), x_range = [-4,10], color = BLUE)
+        G6 = VGroup(graph6,axes4,axis_labels4)
+
+        self.play(Write(title), run_time = 4)
+        self.play(title.animate.move_to([0,3,0]))
+        self.play(Write(ConvoEq))
+        self.play(Write(Algoritmo), run_time = 4)
+        self.play(Write(Passo1))
+        self.play(Write(Passo2))
+        self.play(Write(Passo3))
+        self.play(FadeOut(ConvoEq))
+        self.play(FadeOut(title))
+        self.play(Write(Example1))
+        self.play(FadeOut(Algoritmo))
+        self.play(Write(VGroup(Equation2,Equation1)))
+        self.play(Passo1.animate.set_color(BLUE).move_to([0,2.3,0]).scale(1.1))
+        self.play(ReplacementTransform(Equation2, Equation2tau))
+        self.play(ReplacementTransform(Equation1, Equation1tau))
+
+        self.play(DrawBorderThenFill(axes))
+        self.play(Create(G1), run_time = 3)
+        self.wait(2)
+        self.play(DrawBorderThenFill(axes2))
+        self.play(Create(G2), run_time = 3)
+        self.wait(2)
+        self.play(FadeOut(Passo1))
+        self.play(Passo2.animate.set_color(BLUE).move_to([0,2.3,0]).scale(1.1))
+        self.play(ReplacementTransform(Equation2tau, Equation2tauneg))
+        self.play(ReplacementTransform(G1, G3))
+        self.play(ReplacementTransform(Equation2tauneg, Equation2taunegt))
+        self.play(FadeOut(axes))
+        self.play(ReplacementTransform(axis_labelsneg, axis_labelsnegt))
+        self.wait(2)
+        self.play(FadeOut(Passo2))
+        self.play(Passo3.animate.set_color(BLUE).move_to([0,2.3,0]).scale(1.1))
+        self.play(ReplacementTransform(VGroup(Equation2taunegt,Equation1tau), Equation3))
+        self.wait(2)
+
+        G2 = VGroup(graph2,graph_line2,axis_labels2,axes2)
+        G3 = VGroup(graph3,graph_line3,axis_labelsnegt)
+
+        self.play(ReplacementTransform(VGroup(G3,G2),VGroup(G4,G5)))
+        self.play(Write(IntegerP1))
+        self.play(G4.animate.shift(LEFT*0.5))
+        self.play(G4.animate.shift(RIGHT*0.5))
+        self.play(ReplacementTransform(Equation3,Equation3P1))
+        self.play(ReplacementTransform(IntegerP1,IntegerP1t))
+        self.play(Write(Equationyt[0][0:18]))
+        self.play(ReplacementTransform(IntegerP1t,IntegerP2))
+        self.play(G4.animate.shift(RIGHT*0.65))
+        self.play(ReplacementTransform(Equation3P1,Equation3P2))
+        self.play(G4.animate.shift(LEFT*0.55))
+        self.play(G4.animate.shift(RIGHT*0.55))
+        self.play(ReplacementTransform(IntegerP2,IntegerP2t))
+        self.play(Write(Equation3P2res[0]))
+        self.play(ReplacementTransform(Equation3P2res[0],Equation3P2res[1]))
+        self.play(ReplacementTransform(Equation3P2res[1],Equation3P2res[2]))
+        self.play(ReplacementTransform(Equation3P2res[2],Equation3P2res[3]))
+        self.play(Write(Equationyt[0][18:50]))
+        self.play(ReplacementTransform(IntegerP2t,IntegerP3))
+        self.play(G4.animate.shift(RIGHT*0.65))
+        self.play(ReplacementTransform(VGroup(Equation3P2,Equation3P2res[3]),Equation3P3))
+        self.play(G4.animate.shift(LEFT*0.55))
+        self.play(G4.animate.shift(RIGHT*1.5))
+        self.play(ReplacementTransform(IntegerP3,IntegerP3t))
+        self.play(Write(Equation3P3res[0]))
+        self.play(ReplacementTransform(Equation3P3res[0],Equation3P3res[1]))
+        self.play(ReplacementTransform(Equation3P3res[1],Equation3P3res[2]))
+        self.play(ReplacementTransform(Equation3P3res[2],Equation3P3res[3]))
+        self.play(Write(Equationyt[0][50:80]))
+        self.play(FadeOut(VGroup(IntegerP3t,Equation3P3res[3],Equation3P3,Passo3)))
+        self.play(Equationyt.animate.move_to([0,1.5,0]).scale(1.1))
+        self.play(ReplacementTransform(VGroup(G4,G5),G6))
+        self.wait(4)
