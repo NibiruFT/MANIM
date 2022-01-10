@@ -59,7 +59,7 @@ class OpeningCircuit(Scene):
         circuitP1.scale(0.5)
         circuitP1[0][8:13].set_color(GREEN)
         circuitP1[0][17:22].set_color(RED)
-        
+         
         #Comportamento dos Diodos no SemiCiclo Negativo
         circuit2 = Tex(r"""
             \begin{circuitikz}[american]
