@@ -26,7 +26,7 @@ class OpeningCircuit(Scene):
 
         Capacitor1 = Tex(r"$V_{C1}=-0.7+V_p$")
         Capacitor2 = Tex(r"$V_{C2}=-1.4+2V_p$")
-         
+          
         #SemiCiclo Negativo
         circuit1 = Tex(r"""
             \begin{circuitikz}[american]
