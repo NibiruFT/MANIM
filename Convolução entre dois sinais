@@ -29,7 +29,7 @@ class Total(Scene):
 
         Equation1tau = MathTex(r"h(\tau)=e^{-2\tau}[u(\tau+3)-u(\tau)]").move_to([3.5,1.5,0]).scale(0.8)
         Equation2tau = MathTex(r"x(\tau)=e^{-5\tau}u(\tau+1)").move_to([-3.5,1.5,0]).scale(0.8)
-
+ 
         Equation2tauneg = MathTex(r"x(-\tau)=e^{-5(-\tau)}u(-\tau+1)").move_to([-3.5,1.5,0]).scale(0.8)
         Equation2taunegt = MathTex(r"x(t-\tau)=e^{-5(t-\tau)}u(t-\tau+1)").move_to([-3.5,1.5,0]).scale(0.8)
 
