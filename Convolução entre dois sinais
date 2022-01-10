@@ -1,6 +1,6 @@
 from manim import *
 import scipy.integrate as integrate
-
+ 
 class Total(Scene):
     def construct(self):
         
