@@ -1,0 +1,153 @@
+from manim import *
+
+class OpeningCircuit(Scene):
+    def construct(self):
+        myTemplate = TexTemplate()
+        myTemplate.add_to_preamble(r"\usepackage{circuitikz}")
+        myTemplate.add_to_preamble(r"\usepackage{tikz}")
+        myTemplate.add_to_preamble(r"\usepackage{siunitx}")
+        myTemplate.add_to_preamble(r"\usepackage{latexsym,amssymb,amsmath}")
+
+        # Sin Wave
+        axes = Axes(
+            x_range=[0, 10, 2],
+            y_range=[-1.5, 1.5, 1],
+            x_length=10,
+            axis_config={"color": WHITE},
+            x_axis_config={
+                "numbers_to_include": np.arange(0, 10.01, 2),
+                "numbers_with_elongated_ticks": np.arange(0, 10.01, 2),
+            },
+            tips=False,
+        ).scale(0.5).shift(DOWN*1.5)
+        axes_labels = axes.get_axis_labels()
+        sin_graph = axes.plot(lambda x: np.sin(x), color=GREEN, x_range=[0,PI])
+        sin_graph2 = axes.plot(lambda x: np.sin(x), color=RED, x_range=[PI,2*PI])
+
+        Capacitor1 = Tex(r"$V_{C1}=-0.7+V_p$")
+        Capacitor2 = Tex(r"$V_{C2}=-1.4+2V_p$")
+
+        #SemiCiclo Negativo
+        circuit1 = Tex(r"""
+            \begin{circuitikz}[american]
+            \ctikzset{capacitors/scale=0.6}
+                \draw (0,-3)	to[sV=$V_p$] (0,0);
+                \draw    (0,-3) -- (3,-3);
+                \draw    (3,-3) to[empty diode,label=$D_1$  ] (3,0);
+                \draw    (0,0) to[C=$C_1$] (3,0);
+                \draw    (3,0) to[empty diode,label=$D_2$ ] (6,0);
+                \draw    (6,0) to[C=$C_2$] (6,-3);
+                \draw    (3,-3) -- (6,-3);
+            \end{circuitikz}
+            """
+            ,stroke_width=2,tex_template = myTemplate,fill_opacity=0)
+        circuit1.scale(0.5).shift(DOWN*1.5)
+
+        circuitP1 = Tex(r"""
+            \begin{circuitikz}[american]
+            \ctikzset{capacitors/scale=0.6}
+                \draw (0,-3)	to[sV=$V_p$] (0,0);
+                \draw    (0,-3) -- (3,-3);
+                \draw    (3,-3) to[empty diode,label=$D_1$  ] (3,0);
+                \draw    (0,0) to[C=$C_1$] (3,0);
+                \draw    (3,0) to[empty diode,label=$D_2$ ] (6,0);
+                \draw    (6,0) to[C=$C_2$] (6,-3);
+                \draw    (3,-3) -- (6,-3);
+            \end{circuitikz}
+            """
+            ,stroke_width=2,tex_template = myTemplate,fill_opacity=0)
+        circuitP1.scale(0.5)
+        circuitP1[0][8:13].set_color(GREEN)
+        circuitP1[0][17:22].set_color(RED)
+        
+        #Comportamento dos Diodos no SemiCiclo Negativo
+        circuit2 = Tex(r"""
+            \begin{circuitikz}[american]
+            \ctikzset{capacitors/scale=0.6}
+                \draw(0,-3)	to[sV=$V_p$] (0,0);
+                \draw(0,-3) -- (3,-3);
+                \draw(3,-3) to[V=$V_{D1}$] (3,0);
+                \draw(3,0) to[C=$C_1$,v=$V_{C1}$] (0,0);
+                \draw(3,0) -- (4,0);
+                \draw(4,0) to[open] (5,0);
+                \draw(5,0) -- (6,0);
+                \draw(6,0) to[C=$C_2$] (6,-3);
+                \draw(3,-3) -- (6,-3);
+                \draw(1.25,-1.5) node[scale=3]{$\circlearrowleft$}
+                (1.5,-1.5);
+            \end{circuitikz}
+            """
+            ,stroke_width=2,tex_template = myTemplate,fill_opacity=0)
+        circuit2.scale(0.5)
+        circuit2[0][8:12].set_color(GREEN)
+        circuit2[0][24:26].set_color(RED)
+        circuit2.shift([-4, 1.5,0])
+
+        #SemiCiclo Positivo
+        circuit3 = Tex(r"""
+            \begin{circuitikz}[american]
+            \ctikzset{capacitors/scale=0.6}
+            \draw (0,0)	to[sV=$V_p$] (0,-3);
+            \draw    (0,-3) -- (3,-3);
+            \draw    (3,-3) to[empty diode,label=$D_1$  ] (3,0);
+            \draw    (0,0) to[C=$C_1$] (3,0);
+            \draw    (3,0) to[empty diode,label=$D_2$ ] (6,0);
+            \draw    (6,0) to[C=$C_2$] (6,-3);
+            \draw    (3,-3) -- (6,-3);
+            \end{circuitikz}
+            """
+            ,stroke_width=2,tex_template = myTemplate,fill_opacity=0)
+        circuit3.scale(0.5)
+        circuit3[0][8:13].set_color(RED)
+        circuit3[0][17:22].set_color(GREEN)
+
+        #Comportamento dos Diodos no SemiCiclo Positivo
+        circuit4 = Tex(r"""
+            \begin{circuitikz}[american]
+            \ctikzset{capacitors/scale=0.6}
+                \draw(0,0)	to[sV=$V_p$] (0,-3);
+                \draw(0,-3) -- (3,-3);
+                \draw(3,-2.5)  to[open] (3,-0.5);
+                \draw(3,0) to[C=$C_1$,v=$V_{C1}$] (0,0);
+                \draw(3,-3) -- (3,-2.5);
+                \draw(3,0) to[V=$V_{D2}$] (6,0);
+                \draw(3,0) -- (3,-0.5);
+                \draw(6,0) to[C=$C_2$,v=$V_{C2}$] (6,-3);
+                \draw(3,-3) -- (6,-3);
+                \draw(3,-1.5) node[scale=3]{$\circlearrowright$}
+                (3,-1.5);
+            \end{circuitikz}
+            """
+            ,stroke_width=2,tex_template = myTemplate,fill_opacity=0)
+        circuit4.scale(0.5)
+        circuit4[0][17].set_color(RED)
+        circuit4[0][25].set_color(RED)
+        circuit4[0][18:25].set_color(GREEN)
+        circuit4.shift([4, 1.5,0])
+        
+        
+        SemiP = Tex("Semi ciclo Positivo")
+        SemiN = Tex("Semi ciclo Negativo")
+
+        self.wait(3)  
+        #self.play(Write(circuitP1),Write(circuit), run_time = 2)
+        self.play(Write(circuit1), run_time = 2)
+        #self.play(circuit1.animate.set_opacity(0),circuit.animate.set_opacity(0))
+        self.wait(3)  
+        self.play(circuitP1.animate.move_to([-4, 1.5,0]),circuit3.animate.move_to([4, 1.5,0]))
+        SemiP.set_color(YELLOW).next_to(circuit3,UP).scale(0.8)
+        SemiN.set_color(YELLOW).next_to(circuitP1,UP).scale(0.8)
+        self.play(FadeOut(circuit1),run_time = 2)
+        self.play(Create(VGroup(axes, sin_graph,sin_graph2)))
+        self.wait(1)
+        self.play(FadeOut(VGroup(axes, sin_graph,sin_graph2)),run_time = 1)
+        self.play(circuit2.animate.move_to([-4, -1.5,0]),circuit4.animate.move_to([4, -1.5,0]))
+        self.wait(3)  
+        Capacitor1.next_to(circuit2,DOWN).scale(0.8)
+        Capacitor2.next_to(circuit4,DOWN).scale(0.8)
+
+        self.play(Write(SemiN), run_time = 2)
+        self.play(Write(SemiP), run_time = 2)
+        self.wait(3)
+        self.play(Write(VGroup(Capacitor1,Capacitor2)), run_time = 2)
+        self.wait(3)
