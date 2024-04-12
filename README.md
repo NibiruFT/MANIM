@@ -25,3 +25,8 @@ Manim is a tool created by [3Blue1Brown](https://www.3blue1brown.com/), and is b
 
 > For local installation, please visit the [Documentation](https://docs.manim.community/en/stable/installation.html)
 and follow the appropriate instructions for your operating system.
+
+## Animations
+
+- [Animation 1](https://github.com/NibiruFT/MANIM/tree/main/Animation%201): RLC: A Phasor Analysis
+
