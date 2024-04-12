@@ -28,5 +28,5 @@ and follow the appropriate instructions for your operating system.
 
 ## Animations
 
-- [Animation 1](https://github.com/NibiruFT/MANIM/tree/main/Animation%201): RLC: A Phasor Analysis
+- [Animation 1](https://github.com/NibiruFT/MANIM/tree/main/Animation%201) - RLC: A Phasor Analysis
 
