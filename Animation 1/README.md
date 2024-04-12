@@ -2,7 +2,7 @@
 
 <p align="center">
         <img src="https://raw.githubusercontent.com/NibiruFT/MANIM/main/Animation%201/RLC.png"
-             ">
+            width="650"  height="350" ">
     </a>
 </p>
 
