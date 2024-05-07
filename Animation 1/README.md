@@ -12,7 +12,7 @@
 
 I leveraged the [Voiceover](https://docs.manim.community/en/stable/guides/add_voiceovers.html) feature provided by Manim and employed a [local AI](https://docs.aihub.wtf) voice overlay on my PC to operate a model of David Attenborough, owing to his distinctive and recognizable voice. 
 
-### Results
+## Results
 
 > [Video](https://youtu.be/StlSW1KD5zg?si=kFfMmVWM4EirIhzI)
 
